@@ -57,20 +57,19 @@ class MergePdf(BrowserView):
         merged_pdf.close()
         return temp_output.name
 
-    def extract_content_core(self, document):
+    def extract_content(self, document):
         """ Render the document view and extract the #content-core part. """
         # Render the whole view
         portal = api.portal.get()
-        # url = document.absolute_url()
-        url = '/'.join(document.getPhysicalPath())
-        html = portal.restrictedTraverse(url)()
+        path = '/'.join(document.getPhysicalPath())
+        html = portal.restrictedTraverse(path)()
         
         # Parse the HTML to extract #content-core
         soup = BeautifulSoup(html, 'html.parser')
-        # content_core = soup.select_one('#content-core')
-        content_core = soup.select_one('html')
+        # content= soup.select_one('#content-core')
+        content = soup.select_one('html')
         
-        if content_core:
+        if content:
             # Add custom CSS for top margin
             style_tag = soup.new_tag('style')
             style_tag.string = """
@@ -79,8 +78,8 @@ class MergePdf(BrowserView):
                     margin-top: 60px;  /* Adjust this value if needed */
                 }
             """
-            # Insert the style tag at the beginning of content_core
-            content_core.insert(0, style_tag)
+            # Insert the style tag at the beginning of content
+            content.insert(0, style_tag)
             viewlets = ["edit-bar",
                         "portal-top",
                         "portal-mainnavigation",
@@ -97,10 +96,10 @@ class MergePdf(BrowserView):
             
             for viewlet in viewlets:
             # Remove the #viewlets we dont want 
-                viewlet_to_remove = content_core.find(id=viewlet)
+                viewlet_to_remove = content.find(id=viewlet)
                 if viewlet_to_remove:
                     viewlet_to_remove.decompose()   
-            return str(content_core)
+            return str(content)
         return ""
 
     def __call__(self):
@@ -129,9 +128,9 @@ class MergePdf(BrowserView):
                     temp_files.append(pdf_path.name)  # Track for cleanup
             elif file_item.portal_type in ["Document", "Folder"]:
                 # Extract #content-core from Document
-                content_core_html = self.extract_content_core(file_item)
-                if content_core_html:
-                    temp_pdf_path = self.convert_html_to_pdf(content_core_html)
+                content_html = self.extract_content(file_item)
+                if content_html:
+                    temp_pdf_path = self.convert_html_to_pdf(content_html)
                     pdf_files.append(temp_pdf_path)
                     temp_files.append(temp_pdf_path)  # Track for cleanup
 
