@@ -10,7 +10,6 @@
     name="merge-pdf"
     for="plone.app.contenttypes.interfaces.IFolder"
     class=".merge_pdf.MergePdf"
-    template="merge_pdf.pt"
     permission="zope2.View"
     layer="medialog.pdfmerge.interfaces.IMedialogPdfmergeLayer"
     />
