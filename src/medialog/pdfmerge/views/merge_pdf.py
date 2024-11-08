@@ -27,6 +27,7 @@ class MergePdf(BrowserView):
         files = []
         for item in folder.listFolderContents():
             if item.portal_type == "Folder":
+                files.append(item)
                 files.extend(self.get_files(item))  # Recurse into subfolders
             elif item.portal_type == "File":
                 filename = item.file.filename.lower()
@@ -59,7 +60,10 @@ class MergePdf(BrowserView):
     def extract_content_core(self, document):
         """ Render the document view and extract the #content-core part. """
         # Render the whole view
-        html = document.restrictedTraverse('@@view')()
+        portal = api.portal.get()
+        # url = document.absolute_url()
+        url = '/'.join(document.getPhysicalPath())
+        html = portal.restrictedTraverse(url)()
         
         # Parse the HTML to extract #content-core
         soup = BeautifulSoup(html, 'html.parser')
@@ -123,7 +127,7 @@ class MergePdf(BrowserView):
                     pdf_path.close()
                     pdf_files.append(pdf_path.name)
                     temp_files.append(pdf_path.name)  # Track for cleanup
-            elif file_item.portal_type == "Document":
+            elif file_item.portal_type in ["Document", "Folder"]:
                 # Extract #content-core from Document
                 content_core_html = self.extract_content_core(file_item)
                 if content_core_html:
