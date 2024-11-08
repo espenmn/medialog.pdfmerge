@@ -1,0 +1,18 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="medialog.pdfmerge">
+
+ <!-- -*- extra stuff goes here -*- -->
+
+  <browser:page
+    name="merge-pdf"
+    for="plone.app.contenttypes.interfaces.IFolder"
+    class=".merge_pdf.MergePdf"
+    template="merge_pdf.pt"
+    permission="zope2.View"
+    layer="medialog.pdfmerge.interfaces.IMedialogPdfmergeLayer"
+    />
+
+</configure>
