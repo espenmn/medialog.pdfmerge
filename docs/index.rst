@@ -1,0 +1,5 @@
+=================
+medialog.pdfmerge
+=================
+
+User documentation
