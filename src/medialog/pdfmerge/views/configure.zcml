@@ -22,4 +22,14 @@
     layer="medialog.pdfmerge.interfaces.IMedialogPdfmergeLayer"
     />
 
+    <browser:page
+      name="merge-pdf"
+      for="plone.app.contenttypes.interfaces.ICollection"
+      class=".merge_pdf.MergePdf"
+      permission="zope2.View"
+      layer="medialog.pdfmerge.interfaces.IMedialogPdfmergeLayer"
+    />
+
+   
+
 </configure>
