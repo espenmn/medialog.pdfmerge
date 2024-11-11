@@ -43,7 +43,10 @@ class MergePdf(BrowserView):
     def convert_html_to_pdf(self, html_data):
         """ Convert HTML content to a temporary PDF file and return the filename. """
         temp_pdf = NamedTemporaryFile(delete=False, suffix='.pdf')
-        pdfkit.from_string(html_data, temp_pdf.name)
+        options = {
+            'encoding': 'UTF-8'
+        }
+        pdfkit.from_string(html_data, temp_pdf.name, options=options)
         return temp_pdf.name
 
     def merge_pdfs(self, pdf_files):
@@ -90,6 +93,7 @@ class MergePdf(BrowserView):
                         "portal-footer-wrapper",
                         "viewlet-above-content-body",
                         "form-groups-settings",
+                        "viewlet-above-content",
                         "viewlet-below-content-title", 
                         "viewlet-below-content", 
                         "viewlet-below-content-body", 
@@ -107,6 +111,7 @@ class MergePdf(BrowserView):
     def __call__(self):
         # Get the folder where this view is called
         folder = self.context
+        file_name = self.context.id
 
         # Step 1: Collect all PDF, HTML, and Document files in folder and subfolders
         files = self.get_files(folder)
@@ -150,7 +155,7 @@ class MergePdf(BrowserView):
         os.remove(merged_pdf_path)  # Cleanup merged file
 
         self.request.response.setHeader("Content-Type", "application/pdf")
-        self.request.response.setHeader("Content-Disposition", 'attachment; filename="merged_output.pdf"')
+        self.request.response.setHeader("Content-Disposition", f'attachment; filename="{file_name}"') 
         self.request.response.setHeader("Content-Length", len(pdf_data))
         
         return pdf_data
