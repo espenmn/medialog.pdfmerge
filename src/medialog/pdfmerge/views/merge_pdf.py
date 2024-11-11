@@ -27,8 +27,10 @@ class MergePdf(BrowserView):
         files = []
         for item in folder.listFolderContents():
             if item.portal_type == "Folder":
-                files.append(item)
-                files.extend(self.get_files(item))  # Recurse into subfolders
+                # Skip folders that are not supposed to be included
+                if not item.exclude_from_nav:
+                    files.append(item)
+                    files.extend(self.get_files(item))  # Recurse into subfolders
             elif item.portal_type == "File":
                 filename = item.file.filename.lower()
                 if filename.endswith(".pdf") or filename.endswith(".html"):
