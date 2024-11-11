@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object name="portal_actions" meta_type="Plone Actions Tool"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+    <object name="object_buttons" meta_type="CMF Action Category">
+        <object name="merge_pdf" meta_type="CMF Action" i18n:domain="medialog.pdfmerge">
+            <property name="title" i18n:translate="">Merge to PDF</property>
+            <property name="description" i18n:translate=""></property>
+            <property name="url_expr">string:${object_url}/@@merge-pdf</property>
+            <!-- <property name="icon_expr">string:pdf-logo</property> -->
+            <property name="permissions">
+                <element value="View"/>
+            </property>
+            <property name="visible">True</property>
+            <!-- <property name="modal" type="text">{}</property> -->
+        </object>
+    </object>
+</object>

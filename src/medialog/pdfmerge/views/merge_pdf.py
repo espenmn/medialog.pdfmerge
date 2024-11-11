@@ -26,17 +26,17 @@ class MergePdf(BrowserView):
         """ Recursively get all PDF and HTML files in the folder and subfolders. """
         files = []
         for item in folder.listFolderContents():
-            if item.portal_type == "Folder":
-                # Skip folders that are not supposed to be included
-                if not item.exclude_from_nav:
+             # Skip folders that are not supposed to be included
+            if not item.exclude_from_nav:
+                if item.portal_type == "Folder":
                     files.append(item)
                     files.extend(self.get_files(item))  # Recurse into subfolders
-            elif item.portal_type == "File":
-                filename = item.file.filename.lower()
-                if filename.endswith(".pdf") or filename.endswith(".html"):
+                elif item.portal_type == "File":
+                    filename = item.file.filename.lower()
+                    if filename.endswith(".pdf") or filename.endswith(".html"):
+                        files.append(item)
+                elif item.portal_type == "Document":
                     files.append(item)
-            elif item.portal_type == "Document":
-                files.append(item)
             
         return files
         
@@ -118,7 +118,8 @@ class MergePdf(BrowserView):
             if file_item.portal_type == "File":
                 filename = file_item.file.filename.lower()
                 if filename.endswith(".html"):
-                    html_data = file_item.file.data.decode("utf-8")
+                    html_data = file_item.file.data
+                    #.decode("utf-8")
                     temp_pdf_path = self.convert_html_to_pdf(html_data)
                     pdf_files.append(temp_pdf_path)
                     temp_files.append(temp_pdf_path)  # Track for cleanup
